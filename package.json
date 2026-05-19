@@ -1,0 +1,62 @@
+{
+  "name": "@carbon-cashmere/x402-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that exposes Carbon & Cashmere's 177 crypto market intelligence endpoints with automatic x402 micropayments. Buy crypto signals, on-chain data, and trading intelligence directly from your AI agent's wallet.",
+  "type": "module",
+  "bin": {
+    "x402-mcp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "x402",
+    "crypto",
+    "ai-agent",
+    "claude",
+    "cursor",
+    "micropayments",
+    "trading-signals",
+    "on-chain-analytics"
+  ],
+  "author": "Carbon & Cashmere",
+  "license": "MIT",
+  "homepage": "https://api.carbon-cashmere.de",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CarbonCashmere/x402-mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/CarbonCashmere/x402-mcp/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.9.0",
+    "@x402/axios": "^2.12.0",
+    "@x402/evm": "^2.12.0",
+    "@x402/svm": "^2.12.0",
+    "axios": "^1.13.2",
+    "viem": "^2.39.0",
+    "@solana/kit": "^5.1.0",
+    "@scure/base": "^1.2.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    ".env.example"
+  ]
+}
