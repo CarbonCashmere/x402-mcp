@@ -1,6 +1,6 @@
 {
   "name": "@carbon-cashmere/x402-mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "MCP server that exposes Carbon & Cashmere's 177 crypto market intelligence endpoints with automatic x402 micropayments. Buy crypto signals, on-chain data, and trading intelligence directly from your AI agent's wallet.",
   "type": "module",
   "bin": {
