@@ -65,7 +65,7 @@ async function main(): Promise<void> {
   }
 
   const server = new Server(
-    { name: "carbon-cashmere-x402", version: "0.2.1" },
+    { name: "carbon-cashmere-x402", version: "0.2.2" },
     { capabilities: { tools: {} } },
   );
 
