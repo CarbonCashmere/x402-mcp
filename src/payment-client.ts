@@ -12,8 +12,11 @@
  * The buyer holds the keys; we never see them server-side. Keys come
  * from EVM_PRIVATE_KEY (0x...) and SVM_PRIVATE_KEY (base58) env vars.
  *
- * At least one of the two MUST be set. If a tool routes to a Solana-only
- * endpoint and only EVM_PRIVATE_KEY is set, the tool call fails cleanly.
+ * If no keys are set, the client still starts in DISCOVERY-ONLY mode:
+ * tools/list works, free endpoints work, paid tools surface a 402 to
+ * the agent at invocation time. This lets marketplaces (Glama, MCP
+ * directories) introspect the server's tool catalog without funding
+ * a wallet.
  */
 import axios, { type AxiosInstance } from "axios";
 import { x402Client, wrapAxiosWithPayment } from "@x402/axios";
@@ -27,12 +30,16 @@ export async function createPaymentClient(baseURL: string): Promise<AxiosInstanc
   const evmPrivateKey = process.env.EVM_PRIVATE_KEY as `0x${string}` | undefined;
   const svmPrivateKey = process.env.SVM_PRIVATE_KEY;
 
+  const plain = axios.create({ baseURL, timeout: 60_000 });
+
   if (!evmPrivateKey && !svmPrivateKey) {
-    throw new Error(
-      "At least one of EVM_PRIVATE_KEY or SVM_PRIVATE_KEY must be set. " +
-        "EVM key (0x-prefixed hex) pays via Base/Polygon/Arbitrum; SVM key " +
-        "(base58) pays via Solana. Wallet needs USDC balance on the chosen chain.",
+    process.stderr.write(
+      "[x402-mcp warn] No EVM_PRIVATE_KEY or SVM_PRIVATE_KEY set — running in " +
+        "discovery-only mode. Free endpoints work; paid endpoints return 402 to " +
+        "the agent. Set EVM_PRIVATE_KEY (0x-hex) or SVM_PRIVATE_KEY (base58) to " +
+        "enable automatic micropayments.\n",
     );
+    return plain;
   }
 
   const client = new x402Client();
@@ -47,5 +54,5 @@ export async function createPaymentClient(baseURL: string): Promise<AxiosInstanc
     registerExactSvmScheme(client, { signer: svmSigner });
   }
 
-  return wrapAxiosWithPayment(axios.create({ baseURL, timeout: 60_000 }), client);
+  return wrapAxiosWithPayment(plain, client);
 }

@@ -22,9 +22,12 @@
  *
  * Env vars optional:
  *   X402_API_BASE    — defaults to https://api.carbon-cashmere.de
- *   X402_TOOL_LIMIT  — cap MCP tool count (default 50, max 177).
- *                      Limit recommended because too many tools degrade
- *                      Claude's tool-selection accuracy.
+ *   X402_TOOL_LIMIT  — cap MCP tool count (default 100, max 177).
+ *                      100 captures the high-revenue tier (subscriptions,
+ *                      sponsor tiers, research endpoints, intelligence
+ *                      bundles). 177 includes per-coin variants
+ *                      (vol-regime/{coin}, hurst/{coin}, ...) — recommended
+ *                      only if your agent knows which coin to query.
  *   X402_LOG_LEVEL   — debug | info | warn | error (default info)
  */
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
@@ -37,7 +40,7 @@ import { createPaymentClient } from "./payment-client.js";
 import { discoverTools, type ToolDef } from "./tools.js";
 
 const API_BASE = process.env.X402_API_BASE ?? "https://api.carbon-cashmere.de";
-const TOOL_LIMIT = Math.max(1, Math.min(177, parseInt(process.env.X402_TOOL_LIMIT ?? "50", 10)));
+const TOOL_LIMIT = Math.max(1, Math.min(177, parseInt(process.env.X402_TOOL_LIMIT ?? "100", 10)));
 const LOG_LEVEL = process.env.X402_LOG_LEVEL ?? "info";
 
 function log(level: string, ...args: unknown[]) {
@@ -62,7 +65,7 @@ async function main(): Promise<void> {
   }
 
   const server = new Server(
-    { name: "carbon-cashmere-x402", version: "0.1.0" },
+    { name: "carbon-cashmere-x402", version: "0.2.1" },
     { capabilities: { tools: {} } },
   );
 
